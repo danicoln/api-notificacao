@@ -1,4 +1,4 @@
-package com.microservices.pedidos.notificacao.notificacao;
+package com.microservices.pedidos.notificacao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
