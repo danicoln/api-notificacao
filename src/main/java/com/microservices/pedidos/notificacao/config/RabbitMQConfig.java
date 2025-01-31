@@ -24,43 +24,64 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.name}")
     private String queueName;
 
+    /**
+     * Retorna uma exchange do tipo Fanout
+     */
     @Bean
     public FanoutExchange pedidoExchange() {
         return new FanoutExchange(exchangeName);
     }
 
+    /**
+     * Retorna uma fila Queue
+     */
     @Bean
     public Queue notificacaoQueue() {
         return new Queue(queueName);
     }
 
+    /**
+     * Método que faz o binding da fila com a exchange
+     */
     @Bean
     public Binding binding() {
         return BindingBuilder.bind(notificacaoQueue()).to(pedidoExchange());
     }
 
+    /**
+     * Retorna uma nova conexão com o RabbitMq
+     */
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory){
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 
+    /**
+     * Converte as mensagens em JSON
+     */
     @Bean
     public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
+    /**
+     * Faz a conexão com o RabbitMQ para enviar e receber as mensagens
+     */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         MessageConverter messageConverter){
+                                         MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
 
+    /**
+     * A configuração é aplicada no momento em que o Spring é inicializado
+     */
     @Bean
     public ApplicationListener<ApplicationReadyEvent> applicationReadyEventApplicationListener(
             RabbitAdmin rabbitAdmin
-    ){
+    ) {
         return event -> rabbitAdmin.initialize();
     }
 
