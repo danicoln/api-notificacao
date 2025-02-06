@@ -23,9 +23,9 @@ public class EmailService {
     }
 
     private String gerarMensagem(Pedido pedido) {
-        String pedidoId = pedido.getId().toString();
+        String pedidoId = String.valueOf(pedido.getId());
         String cliente = pedido.getCliente();
-        String valorTotal = String.valueOf(pedido.getValorTotal());
+        String valorTotal = String.format("%.2f", pedido.getValorTotal());
         String status = pedido.getStatus().name();
         return String.format(
                 "Olá %s, seu pedido de nº %s, no valor de %s, foi realizado com sucesso. \n" +
